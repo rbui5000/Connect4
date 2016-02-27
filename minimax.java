@@ -1,4 +1,3 @@
-
 public class minimax extends AIModule{
 	private int depthmax; 
 	private int MaxMove; 
@@ -31,7 +30,10 @@ public class minimax extends AIModule{
 		if(terminate)
 			return 0; 
 		if(depth == depthmax)
+		{
 			return MT.getScore();// return by finding the score. 
+		}
+			
 		depth++; 
 		MakeTable deepcopy;
 		if(playerID == 1)
@@ -105,22 +107,13 @@ public class minimax extends AIModule{
 		private int[][] y; 
 		private int[][] dx; 
 		private int[][] dy;
-		private int score; 
-		private final int[][] w = 
-			{{1, 1, 1, 2, 1, 1, 1},	
-             {1, 2, 2, 3, 2, 2, 1},
-             {1, 2, 3, 4, 3, 2, 1},
-             {1, 2, 3, 4, 3, 2, 1},
-             {1, 2, 2, 3, 2, 2, 1},		  				  		
-             {1, 1, 1, 2, 1, 1, 1}};
-		
+	
 		public MakeTable()
 		{
 			x = new int[8][9]; 
 			y = new int[8][9];
 			dx = new int[8][9];
 			dy = new int[8][9];
-			score = 0; 
 		}
 		
 		public MakeTable(MakeTable T)
@@ -129,7 +122,6 @@ public class minimax extends AIModule{
 			y = new int[8][9];
 			dx = new int[8][9];
 			dy = new int[8][9];
-			score = T.score; 
 			
 			for(int i = 0; i < 8; i++)
 			{
@@ -144,17 +136,25 @@ public class minimax extends AIModule{
 		}
 		public int getScore() 
 		{
-			score = 0; 
-			for(int i = 1; i < 7; i++)
+			int score = 0; 
+			int[][] weights = 
+				{{1, 1, 1, 2, 1, 1, 1},	
+	             {1, 2, 2, 3, 2, 2, 1},
+	             {1, 2, 3, 4, 3, 2, 1},
+	             {1, 2, 3, 4, 3, 2, 1},
+	             {1, 2, 2, 3, 2, 2, 1},		  				  		
+	             {1, 1, 1, 2, 1, 1, 1}};
+			
+			for(int i = 1; i <= 6; i++)
 			{
-				for(int j = 1; j < 8; j++)
+				for(int j = 1; j <= 7; j++)
 				{
 					if(x[i][j]==4 || y[i][j] == 4 || dx[i][j] == 4 || dy[i][j]==4)
-						score += 1000; 
+						score = score + 10; 
 					else if (x[i][j]== -4 || y[i][j] == -4 || dx[i][j] == -4 || dy[i][j]==-4)
-						score -= 1000; 
-					else
-						score += (x[i][j] + y[i][j] + dx[i][j] + dy[i][j]) * (w[i-1][j-1]);
+						score = score - 10; 
+					
+					score += (x[i][j] + y[i][j] + dx[i][j] + dy[i][j])*(weights[i-1][j-1]);
 				}
 			}
 			return score; 		
@@ -189,6 +189,7 @@ public class minimax extends AIModule{
 			if(col > 7 || col < 1 || row > 6 || row < 1)
 			{
 				System.out.println("Out of bounds column:" + col + " row:" + row);
+				System.out.println();
 				return; 
 			}
 					
@@ -222,7 +223,7 @@ public class minimax extends AIModule{
 			int bl = t*dx[row-1][col-1]; 
 			
 			if(tr > 0 && bl > 0)
-				for(int i = 0; i<= tr+bl; i++)
+				for(int i = 0; i <= tr+bl; i++)
 					dx[row-bl+i][col-bl+i] = t*(bl+tr)+t;
 			else if (tr > 0)
 				for(int i = 0; i <= tr; i++)
