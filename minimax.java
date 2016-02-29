@@ -1,4 +1,5 @@
-public class minimax extends AIModule{
+
+public class minimax_998796497_912054270 extends AIModule{
 	private int depthmax; 
 	private int MaxMove; 
 	private int[] loadfactor = {1,2,3,4,5,6}; 
@@ -139,11 +140,11 @@ public class minimax extends AIModule{
 			int score = 0; 
 			int[][] weights = 
 				{{1, 1, 1, 2, 1, 1, 1},	
-	             {1, 2, 2, 3, 2, 2, 1},
-	             {1, 2, 3, 4, 3, 2, 1},
-	             {1, 2, 3, 4, 3, 2, 1},
-	             {1, 2, 2, 3, 2, 2, 1},		  				  		
-	             {1, 1, 1, 2, 1, 1, 1}};
+		        	 {1, 2, 2, 3, 2, 2, 1},
+			          {1, 2, 3, 4, 3, 2, 1},
+			             {1, 2, 3, 4, 3, 2, 1},
+			             {1, 2, 2, 3, 2, 2, 1},		  				  		
+			             {1, 1, 1, 2, 1, 1, 1}};
 			
 			for(int i = 1; i <= 6; i++)
 			{
@@ -196,11 +197,11 @@ public class minimax extends AIModule{
 			//updated vertical 
 			int a = t*x[row-1][col]; 
 			
-			if(a <= 0)
-				x[row][col] = t; 
-			else
+			if(a > 0)
 				for(int i = 0; i <= a; i++)
-					x[row-i][col] = a*t + t; 
+					x[row-i][col] = a*t + t; 			
+			else
+				x[row][col] = t; 
 			
 			//update horizontal 
 			int l = t*y[row][col-1];
