@@ -2,17 +2,17 @@
 public class minimax_998796497_912054270 extends AIModule{
 	private int depthmax; 
 	private int MaxMove; 
-	private int[] loadfactor = {1,2,3,4,5,6}; 
-	private MakeTable currMT = new MakeTable(); 
+	private int[] loadfactor = {3, 2, 4, 1, 5, 0, 6}; 
+	private EvaluationTable currET = new EvaluationTable(); 
 	
 	public void getNextMove(final GameStateModule game)
 	{
-		currMT.opponentsMove(game); 
+		currET.opponentsMove(game); 
 		depthmax = 0; 
 
 		while(!terminate)
 		{
-			miniMax(game, currMT, 0, 1); 
+			miniMax(game, currET, 0, 1); 
 		
 			if(!terminate)
 			{
@@ -22,21 +22,21 @@ public class minimax_998796497_912054270 extends AIModule{
 			depthmax++; //increment max depth for next iterations. 
 		}
 		// update the move 
-		currMT.getMove(1, chosenMove);
+		currET.getMove(1, chosenMove);
 	}
 	
-	private int miniMax(final GameStateModule game, MakeTable MT, int depth, int playerID)
+	private int miniMax(final GameStateModule game, EvaluationTable MT, int depth, int playerID)
 	{
 		int v = 0; 
 		if(terminate)
 			return 0; 
 		if(depth == depthmax)
 		{
-			return MT.getScore();// return by finding the score. 
+			return MT.EvaluationFunction();// return by finding the score. 
 		}
 			
 		depth++; 
-		MakeTable deepcopy;
+		EvaluationTable deepcopy;
 		if(playerID == 1)
 		{
 			// This is our max value 
@@ -46,7 +46,7 @@ public class minimax_998796497_912054270 extends AIModule{
 				if(game.canMakeMove(i))
 				{
 					game.makeMove(i);	
-					deepcopy = new MakeTable(MT);
+					deepcopy = new EvaluationTable(MT);
 					deepcopy.getMove(1, i);
 					
 					v = miniMax(game, deepcopy, depth, 2); 
@@ -72,7 +72,7 @@ public class minimax_998796497_912054270 extends AIModule{
 				if(game.canMakeMove(i))
 				{
 					game.makeMove(i);
-					deepcopy = new MakeTable(MT);
+					deepcopy = new EvaluationTable(MT);
 					deepcopy.getMove(2, i);
 					v = miniMax(game, deepcopy, depth, 1);
 					if(min > v)
@@ -103,13 +103,13 @@ public class minimax_998796497_912054270 extends AIModule{
 		System.out.println();
 	}*/
 	
-	public class MakeTable{
+	public class EvaluationTable{
 		private int[][] x; 
 		private int[][] y; 
 		private int[][] dx; 
 		private int[][] dy;
 	
-		public MakeTable()
+		public EvaluationTable()
 		{
 			x = new int[8][9]; 
 			y = new int[8][9];
@@ -117,7 +117,7 @@ public class minimax_998796497_912054270 extends AIModule{
 			dy = new int[8][9];
 		}
 		
-		public MakeTable(MakeTable T)
+		public EvaluationTable(EvaluationTable T)
 		{
 			x = new int[8][9]; 
 			y = new int[8][9];
@@ -135,25 +135,25 @@ public class minimax_998796497_912054270 extends AIModule{
 				}
 			}
 		}
-		public int getScore() 
+		public int EvaluationFunction() 
 		{
 			int score = 0; 
 			int[][] weights = 
 				{{1, 1, 1, 2, 1, 1, 1},	
-		        	 {1, 2, 2, 3, 2, 2, 1},
-			          {1, 2, 3, 4, 3, 2, 1},
-			             {1, 2, 3, 4, 3, 2, 1},
-			             {1, 2, 2, 3, 2, 2, 1},		  				  		
-			             {1, 1, 1, 2, 1, 1, 1}};
+	             {1, 2, 2, 3, 2, 2, 1},
+	             {1, 2, 3, 4, 3, 2, 1},
+	             {1, 2, 3, 4, 3, 2, 1},
+	             {1, 2, 2, 3, 2, 2, 1},		  				  		
+	             {1, 1, 1, 2, 1, 1, 1}};
 			
 			for(int i = 1; i <= 6; i++)
 			{
 				for(int j = 1; j <= 7; j++)
 				{
 					if(x[i][j]==4 || y[i][j] == 4 || dx[i][j] == 4 || dy[i][j]==4)
-						score = score + 10; 
+						score = score + 1000; 
 					else if (x[i][j]== -4 || y[i][j] == -4 || dx[i][j] == -4 || dy[i][j]==-4)
-						score = score - 10; 
+						score = score - 1000; 
 					
 					score += (x[i][j] + y[i][j] + dx[i][j] + dy[i][j])*(weights[i-1][j-1]);
 				}
